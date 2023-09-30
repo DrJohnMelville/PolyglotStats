@@ -1,0 +1,18 @@
+<Project>
+	<PropertyGroup>
+		<Version>0.1.0-preview</Version>
+		<TargetFramework>net7.0</TargetFramework>
+		<Authors>John Melville, MS, MD</Authors>
+		<Company>Melville Computing</Company>
+		<Copyright>2021 John Melville, MS, MD</Copyright>
+		<RepositoryUrl>https://github.com/DrJohnMelville/PolyglotStats</RepositoryUrl>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<Nullable>enable</Nullable>
+		<LangVersion>11.0</LangVersion>
+		<AnalysisLevel>latest</AnalysisLevel>
+	</PropertyGroup>
+	<Target Name="CopyPackage" AfterTargets="Pack">
+		<Copy SourceFiles="$(OutputPath)..\$(PackageId).$(PackageVersion).nupkg"
+		      DestinationFolder="$(SolutionDir)TempNuget\" />
+	</Target>
+</Project>

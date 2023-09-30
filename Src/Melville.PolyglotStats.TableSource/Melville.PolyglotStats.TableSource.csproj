@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+	  <IsPackable>true</IsPackable>
+	  <PackageDescription>Load excel, CSV, or MarkdownTables as data sources</PackageDescription>
+	  <PackageTags>polyglot notebook dotnet interactive Data</PackageTags>
+	  <IncludeBuildOutput>true</IncludeBuildOutput>
+	  <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+	<ItemGroup>
+		<None Include="extension.dib" Pack="true" PackagePath="interactive-extensions/dotnet" />
+	</ItemGroup>
+
+</Project>

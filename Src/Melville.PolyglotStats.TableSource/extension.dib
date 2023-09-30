@@ -1,0 +1,3 @@
+﻿#!csharp
+
+Console.Writeline("XXX");

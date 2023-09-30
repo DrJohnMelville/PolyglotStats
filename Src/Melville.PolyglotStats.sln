@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.33808.371
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Melville.PolyglotStats.TableSource", "Melville.PolyglotStats.TableSource\Melville.PolyglotStats.TableSource.csproj", "{7E87132E-21F6-4FB2-82FD-F052A53E69BC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C4B6C5BA-2C4A-4CED-B7BA-3F9185EA5F56}"
+	ProjectSection(SolutionItems) = preProject
+		Directory.Build.props = Directory.Build.props
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7E87132E-21F6-4FB2-82FD-F052A53E69BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E87132E-21F6-4FB2-82FD-F052A53E69BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E87132E-21F6-4FB2-82FD-F052A53E69BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E87132E-21F6-4FB2-82FD-F052A53E69BC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {46063770-2F8D-4C00-9171-4FFDC866070A}
+	EndGlobalSection
+EndGlobal
