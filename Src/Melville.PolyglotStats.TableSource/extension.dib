@@ -1,3 +1,1 @@
-﻿#!csharp
-
-Console.Writeline("XXX");
+﻿Melville.PolyglotStats.TableSource.KernelConnector.AddKernelToRoot();
