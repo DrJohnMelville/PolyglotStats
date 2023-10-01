@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using Melville.INPC;
 
 namespace Melville.PolyglotStats.TableSource.TypeInference;
@@ -29,4 +30,6 @@ public partial class InferredBooleanType : InferredType
         }
         return false;
     }
+
+    public override void WriteTypeName(StringBuilder target) => target.Append("bool");
 }

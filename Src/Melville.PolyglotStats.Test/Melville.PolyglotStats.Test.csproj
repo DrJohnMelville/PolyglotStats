@@ -37,8 +37,4 @@
     <ProjectReference Include="..\Melville.PolyglotStats.TableSource\Melville.PolyglotStats.TableSource.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="TableSource\ModelGenerators\" />
-  </ItemGroup>
-
 </Project>
