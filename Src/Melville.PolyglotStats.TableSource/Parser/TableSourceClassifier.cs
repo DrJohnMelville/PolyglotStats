@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Linq;
 using System.Text.RegularExpressions;
+using Melville.FileSystem;
 
 namespace Melville.PolyglotStats.TableSource.Parser;
 
@@ -17,4 +19,11 @@ public static partial class TableSourceClassifier
     private static partial Regex CsvDetector();
 
     public static bool IsCsv(ReadOnlySpan<char> item) => CsvDetector().IsMatch(item);
+
+    public static bool IsFile(ReadOnlyMemory<char> item, IDiskFileSystemConnector files)
+    {
+        var firstItem = LineFinder.LineDelimiter().SplitSource(item).First();
+        return files.FileFromPath(firstItem.ToString()).Exists();
+
+    }
 }
