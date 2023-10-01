@@ -88,7 +88,7 @@ public readonly partial struct TableParser
     private Task ReadSingleFile(IFile file)
     {
         return IsExcelFile(file.Path)?
-            new ExcelFileReader(output).ParseAsync(file):
+            ExcelFileReader.ParseAsync(file, output):
             ReadTextFile(file);
     }
 
