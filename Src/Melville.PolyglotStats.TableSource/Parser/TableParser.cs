@@ -1,37 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Xml;
-using FSharp.Compiler.Syntax;
-using FSharp.Compiler.Text;
 using Melville.FileSystem;
 using Melville.INPC;
-using Microsoft.CodeAnalysis.VisualBasic;
 
 namespace Melville.PolyglotStats.TableSource.Parser;
-
-public partial class ParsedTable
-{
-    [FromConstructor] public ReadOnlyMemory<char> Name { get; }
-    public ReadOnlyMemory<char>[] Titles { get; private set; } = Array.Empty<ReadOnlyMemory<char>>();
-
-    public List<ReadOnlyMemory<char>[]> Rows { get; } = new();
-
-    public void AddTitles(List<ReadOnlyMemory<char>> currentLine) => Titles = currentLine.ToArray();
-
-    public void AddData(List<ReadOnlyMemory<char>> currentLine)
-    {
-        Rows.Add(currentLine.ToArray());
-    }
-}
-
-public class ParsedTableSet
-{
-    public List<ParsedTable> Tables = new List<ParsedTable>();
-}
-
 
 public readonly partial struct TableParser
 {
@@ -73,6 +47,7 @@ public readonly partial struct TableParser
         if (TableSourceClassifier.IsCsv(memory.Span)) new CsvParser(table).Parse(memory);
         else if (TableSourceClassifier.IsMarkdown(memory.Span)) new MarkdownParser(table).Parse(memory);
         else if (TableSourceClassifier.IsFile(memory, disk)) await ReadFileList(memory);
+        else new SingleColumnParser(table).Parse(memory);
         if (table.Titles.Length > 0) output.Tables.Add(table);
     }
 

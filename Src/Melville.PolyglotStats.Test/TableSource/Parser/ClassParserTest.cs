@@ -82,6 +82,23 @@ public class ClassParserTest
         TableAssertions(result.Tables[0]);
     }
 
+    [Fact]
+    public async Task ParseSingleColumn()
+    {
+        fileSystemMock.Setup(i => i.FileFromPath(It.IsAny<string>()))
+            .Returns(Mock.Of<IFile>());
+        var result = await DoParse("""
+                                   Name
+                                   1
+                                   2
+                                   3
+                                   Four
+                                   """);
+        result.Tables.Should().HaveCount(1);
+        result.Tables[0].Rows.Should().HaveCount(4);
+
+    }
+
     private static void TableAssertions(ParsedTable table)
     {
         table.Name.ToString().Should().StartWith("SingleTable");
