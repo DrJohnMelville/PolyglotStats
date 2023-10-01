@@ -13,8 +13,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <PackageReference Include="FluentAssertions" Version="7.0.0-alpha.1" />
+	  <PackageReference Include="Melville.FileSystem" Version="0.6.18" />
+	  <PackageReference Include="Melville.Generators.INPC" Version="0.6.18" />
 	  <PackageReference Include="Microsoft.DotNet.Interactive" Version="1.0.0-beta.23461.4" />
 	  <PackageReference Include="Microsoft.DotNet.Interactive.CSharp" Version="1.0.0-beta.23461.4" />
+	  <PackageReference Include="Moq" Version="4.20.69" />
 	</ItemGroup>
 
 </Project>
