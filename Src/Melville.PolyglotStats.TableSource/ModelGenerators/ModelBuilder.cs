@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Melville.INPC;
 using Melville.PolyglotStats.TableSource.TypeInference;
@@ -18,6 +19,9 @@ public readonly partial struct FieldRequest
         type.WriteTypeName(target);
         target.Append($" {name}");
     }
+
+    public void WriteValue(ReadOnlyMemory<char> value, StringBuilder target) =>
+        type.WriteValue(value, target);
 }
 
 public readonly partial struct ModelBuilder
@@ -41,4 +45,30 @@ public readonly partial struct ModelBuilder
         target.AppendLine();
         target.AppendLine("    );");
     }
+
+    public void WriteDataTo(StringBuilder target, IEnumerable<ReadOnlyMemory<char>[]> data)
+    {
+        target.AppendLine($"    public readonly {name}[] {name} = new {name}[] {{");
+        foreach (var row in data)
+        {
+            target.Append("        new (");
+            WriteSingleValue(0, row, target);
+            for (int i = 1; i < fields.Count; i++)
+            {
+                target.Append(", ");
+                WriteSingleValue(i, row, target);
+            }
+            target.AppendLine("),");
+        }
+
+        target.AppendLine("    };");
+    }
+
+    private void WriteSingleValue(int i, ReadOnlyMemory<char>[] row, StringBuilder target)
+    {
+        fields[i].WriteValue(ValueFromArray(i, row), target);
+    }
+
+    private static ReadOnlyMemory<char> ValueFromArray(int i, ReadOnlyMemory<char>[] row) => 
+        i<row.Length?row[i]:ReadOnlyMemory<char>.Empty;
 }

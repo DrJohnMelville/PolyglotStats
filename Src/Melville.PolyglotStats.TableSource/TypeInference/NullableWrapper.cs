@@ -21,4 +21,12 @@ public partial class NullableWrapper : InferredType
         inner.WriteTypeName(target);
         target.Append('?');
     }
+
+    public override void WriteValue(ReadOnlyMemory<char> value, StringBuilder target)
+    {
+        if (value.Length == 0)
+            target.Append("default");
+        else
+            inner.WriteValue(value, target);
+    }
 }

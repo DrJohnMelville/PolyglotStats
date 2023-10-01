@@ -8,13 +8,13 @@ public readonly struct InferType
 {
     public static InferredType[] TypeLibrary =
     {
+        InferredDateType.Instance,
         InferredNumberType<double>.Instance,
         InferredNumberType<ulong>.Instance,
         InferredNumberType<uint>.Instance,
         InferredNumberType<long>.Instance,
         InferredNumberType<int>.Instance,
         InferredBooleanType.Instance,
-        InferredDateType.Instance,
     };
 
     private readonly List<InferredType> candidates = TypeLibrary.ToList();

@@ -32,4 +32,9 @@ public partial class InferredBooleanType : InferredType
     }
 
     public override void WriteTypeName(StringBuilder target) => target.Append("bool");
+    public override void WriteValue(ReadOnlyMemory<char> value, StringBuilder target) => 
+        target.Append(PrintedValue(value));
+
+    private string PrintedValue(ReadOnlyMemory<char> value) => 
+        CheckSpanAgainstValues(value.Span, TrueValues) ? "true" : "false";
 }

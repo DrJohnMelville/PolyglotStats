@@ -11,4 +11,9 @@ public partial class InferredDateType : InferredType
 
     public override void WriteTypeName(StringBuilder target) =>
         target.Append("System.DateTime");
+
+    public override void WriteValue(ReadOnlyMemory<char> value, StringBuilder target)
+    {
+        target.Append($"System.DateTime.Parse(\"{value}\")");
+    }
 }

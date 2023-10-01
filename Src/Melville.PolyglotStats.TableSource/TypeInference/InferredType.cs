@@ -16,4 +16,9 @@ public abstract class InferredType
 
     public abstract bool CanParse(ReadOnlyMemory<char> datum);
     public abstract void WriteTypeName(StringBuilder target);
+
+    public virtual void WriteValue(ReadOnlyMemory<char> value, StringBuilder target)
+    {
+        target.Append(value);
+    }
 }

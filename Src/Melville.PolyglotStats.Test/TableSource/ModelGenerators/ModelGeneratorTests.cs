@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Runtime.InteropServices;
+using System.Text;
 using System.Text.RegularExpressions;
 using FSharp.Compiler.Syntax;
 using Melville.PolyglotStats.TableSource.ModelGenerators;
@@ -8,11 +9,12 @@ namespace Melville.PolyglotStats.Test.TableSource.ModelGenerators;
 
 public class ModelGeneratorTests
 {
-    public void SingleTypeTest(InferredType type, string typeName)
+    private readonly StringBuilder target = new();
+
+    private void SingleTypeTest(InferredType type, string typeName)
     {
         var request = new ModelBuilder("Table".AsMemory(),
             new FieldRequest("Col1".AsMemory(), type));
-        var target = new StringBuilder();
         
         request.WriteTypeDeclarationTo(target);
 
@@ -37,7 +39,6 @@ public class ModelGeneratorTests
         var request = new ModelBuilder("Table".AsMemory(),
             new FieldRequest("Col1".AsMemory(), InferredNumberType<int>.Instance),
             new FieldRequest("Col2".AsMemory(), InferredNumberType<int>.Instance));
-        var target = new StringBuilder();
         
         request.WriteTypeDeclarationTo(target);
 
@@ -48,5 +49,42 @@ public class ModelGeneratorTests
                                           );
                                       
                                       """);
+    }
+
+    [Fact]
+    public void GenerateDataDeclarations()
+    {
+        var request = new ModelBuilder("Table".AsMemory(),
+            new FieldRequest("Col1".AsMemory(), InferredNumberType<int>.Instance),
+            new FieldRequest("Col2".AsMemory(), InferredNumberType<int>.Instance));
+        var data = new[]
+        {
+            new[] { "1".AsMemory(), "2".AsMemory() },
+            new[] { "3".AsMemory(), "4".AsMemory() },
+        };
+
+        request.WriteDataTo(target, data);
+        target.ToString().Should().Be("""
+                                          public readonly Table[] Table = new Table[] {
+                                              new (1, 2),
+                                              new (3, 4),
+                                          };
+                                      
+                                      """);
+    }
+
+    [Theory]
+    [InlineData("2", "2")]
+    [InlineData("1e6", "1e6")]
+    [InlineData("1.5", "1.5")]
+    [InlineData("Hello", "\"Hello\"")]
+    [InlineData("t", "true")]
+    [InlineData("", "default")]
+    [InlineData("1/2/33", "System.DateTime.Parse(\"1/2/33\")")]
+    public void PrintValue(string source, string destination)
+    {
+        var type = InferType.Of(new[] { source.AsMemory() }).SelectByNullability(true);
+        type.WriteValue(source.AsMemory(), target);
+        target.ToString().Should().Be(destination);
     }
 }
