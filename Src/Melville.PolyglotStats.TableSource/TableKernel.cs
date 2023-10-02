@@ -1,4 +1,6 @@
 ﻿using System.Threading.Tasks;
+using Melville.FileSystem;
+using Melville.PolyglotStats.TableSource.ModelGenerators;
 using Microsoft.AspNetCore.Html;
 using Microsoft.DotNet.Interactive;
 using Microsoft.DotNet.Interactive.Commands;
@@ -8,24 +10,19 @@ namespace Melville.PolyglotStats.TableSource;
 
 public class TableKernel: Kernel, IKernelCommandHandler<SubmitCode>
 {
-
     private readonly CSharpKernel innerKernel;
     public TableKernel(CSharpKernel innerKernel) : base("read-tables")
     {
         this.innerKernel = innerKernel;
     }
 
-    public  Task HandleAsync(SubmitCode command, KernelInvocationContext context)
-    {   context.Display(new HtmlString($"""
-                                 <details>
-                                     <summary>Success</summary>
-                                     <p>{command.Code}</p>
-                                 </details>
-                                 """));
-        context.Display(context);
-        return ((IKernelCommandHandler<SubmitCode>)innerKernel)
-            .HandleAsync(new SubmitCode("""
-                                        var title = "Hello World";
-                                        """), context);
+    public async Task HandleAsync(SubmitCode command, KernelInvocationContext context)
+    {
+        var code = await GeneratorFacade.QueryToCode(command.Code, new DiskFileSystemConnector());
+        await ExecuteCSharpCode(context, code);
     }
+
+    private Task ExecuteCSharpCode(KernelInvocationContext context, string code) =>
+        ((IKernelCommandHandler<SubmitCode>)innerKernel)
+        .HandleAsync(new SubmitCode(code), context);
 }

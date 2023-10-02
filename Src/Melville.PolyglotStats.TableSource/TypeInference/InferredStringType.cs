@@ -14,6 +14,6 @@ public partial class InferredStringType : InferredType
 
     public override void WriteValue(ReadOnlyMemory<char> value, StringBuilder target)
     {
-        target.Append($"\"{value}\"");
+        target.Append($"@\"{value}\"");
     }
 }

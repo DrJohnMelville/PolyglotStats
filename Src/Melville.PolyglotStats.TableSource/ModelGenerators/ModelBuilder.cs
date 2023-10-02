@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Melville.INPC;
+using Melville.PolyglotStats.TableSource.Parser;
 using Melville.PolyglotStats.TableSource.TypeInference;
 
 namespace Melville.PolyglotStats.TableSource.ModelGenerators;
@@ -32,9 +33,15 @@ public readonly partial struct ModelBuilder
     public ModelBuilder(ReadOnlyMemory<char> name , params FieldRequest[] fields): 
         this(name, (IList<FieldRequest>)fields){}
 
+    public void GenerateClass(StringBuilder target, IEnumerable<ReadOnlyMemory<char>[]> data)
+    {
+        WriteTypeDeclarationTo(target);
+        WriteDataTo(target, data);
+    }
+
     public void WriteTypeDeclarationTo(StringBuilder target)
     {
-        target.AppendLine($"    public partial record {name} (");
+        target.AppendLine($"    public record {name}Class (");
         for (int i = 0; i < fields.Count - 1; i++)
         {
             fields[i].RenderField(target);
@@ -48,7 +55,7 @@ public readonly partial struct ModelBuilder
 
     public void WriteDataTo(StringBuilder target, IEnumerable<ReadOnlyMemory<char>[]> data)
     {
-        target.AppendLine($"    public readonly {name}[] {name} = new {name}[] {{");
+        target.AppendLine($"    public readonly {name}Class[] {name} = new {name}Class[] {{");
         foreach (var row in data)
         {
             target.Append("        new (");
@@ -64,11 +71,6 @@ public readonly partial struct ModelBuilder
         target.AppendLine("    };");
     }
 
-    private void WriteSingleValue(int i, ReadOnlyMemory<char>[] row, StringBuilder target)
-    {
-        fields[i].WriteValue(ValueFromArray(i, row), target);
-    }
-
-    private static ReadOnlyMemory<char> ValueFromArray(int i, ReadOnlyMemory<char>[] row) => 
-        i<row.Length?row[i]:ReadOnlyMemory<char>.Empty;
+    private void WriteSingleValue(int i, ReadOnlyMemory<char>[] row, StringBuilder target) => 
+        fields[i].WriteValue(row.ValueOrEmpty(i), target);
 }

@@ -19,7 +19,7 @@ public class ModelGeneratorTests
         request.WriteTypeDeclarationTo(target);
 
         target.ToString().Should().Be($"""
-                                          public partial record Table (
+                                          public record TableClass (
                                               {typeName} Col1
                                           );
                                       
@@ -43,7 +43,7 @@ public class ModelGeneratorTests
         request.WriteTypeDeclarationTo(target);
 
         target.ToString().Should().Be("""
-                                          public partial record Table (
+                                          public record TableClass (
                                               System.Int32 Col1,
                                               System.Int32 Col2
                                           );
@@ -65,7 +65,7 @@ public class ModelGeneratorTests
 
         request.WriteDataTo(target, data);
         target.ToString().Should().Be("""
-                                          public readonly Table[] Table = new Table[] {
+                                          public readonly TableClass[] Table = new TableClass[] {
                                               new (1, 2),
                                               new (3, 4),
                                           };
@@ -77,7 +77,7 @@ public class ModelGeneratorTests
     [InlineData("2", "2")]
     [InlineData("1e6", "1e6")]
     [InlineData("1.5", "1.5")]
-    [InlineData("Hello", "\"Hello\"")]
+    [InlineData("Hello", "@\"Hello\"")]
     [InlineData("t", "true")]
     [InlineData("", "default")]
     [InlineData("1/2/33", "System.DateTime.Parse(\"1/2/33\")")]
