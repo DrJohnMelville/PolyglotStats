@@ -19,7 +19,9 @@ public class TableKernel: Kernel, IKernelCommandHandler<SubmitCode>
     public async Task HandleAsync(SubmitCode command, KernelInvocationContext context)
     {
         var code = await GeneratorFacade.QueryToCode(command.Code, new DiskFileSystemConnector());
+        context.DisplayCollapsed("Source Code", code);
         await ExecuteCSharpCode(context, code);
+        context.Display("done");
     }
 
     private Task ExecuteCSharpCode(KernelInvocationContext context, string code) =>

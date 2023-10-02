@@ -12,7 +12,7 @@ public static partial class Renamer
 
     [GeneratedRegex(@"\A[0-9]")]
     private static partial Regex FirstNumber();
-    [GeneratedRegex(@"[^a-zA-Z0-9]+([a-z])")]
+    [GeneratedRegex(@"(?:[^a-zA-Z0-9]|\A)+([a-z])")]
     private static partial Regex SpaceWithSuffix();
     [GeneratedRegex(@"[^a-zA-Z0-9]+")]
     private static partial Regex AnySpace();

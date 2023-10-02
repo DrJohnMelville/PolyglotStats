@@ -22,7 +22,7 @@ public class IntegrationTest
         public class DataClass {
             public record Table1Class (
                 System.Int32? ColumnA,
-                bool columnB
+                bool ColumnB
             );
             public readonly Table1Class[] Table1 = new Table1Class[] {
                 new (1, true),
