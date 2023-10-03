@@ -18,11 +18,11 @@ public class TableKernel: Kernel, IKernelCommandHandler<SubmitCode>
 
     public async Task HandleAsync(SubmitCode command, KernelInvocationContext context)
     {
-        using var result = await GeneratorFacade.QueryToCode(command.Code, new DiskFileSystemConnector());
-           //Holding on to result until after ExecuteCSharpCode keeps the memory mapped filed open
-        context.DisplayCollapsed("Source Code", result.Code);
-        await ExecuteCSharpCode(context, result.Code);
-        context.Display("done");
+        using (var result = await GeneratorFacade.QueryToCode(command.Code, new DiskFileSystemConnector()))
+        {   //Holding on to result until after ExecuteCSharpCode keeps the memory mapped files open
+            context.DisplayCollapsed("Source Code", result.Code);
+            await ExecuteCSharpCode(context, result.Code);
+        }
     }
 
     private Task ExecuteCSharpCode(KernelInvocationContext context, string code) =>

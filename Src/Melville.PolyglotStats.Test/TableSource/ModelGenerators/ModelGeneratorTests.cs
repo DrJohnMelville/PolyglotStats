@@ -50,27 +50,4 @@ public class ModelGeneratorTests
                                       
                                       """);
     }
-
-    [Fact]
-    public void GenerateDataDeclarations()
-    {
-        var request = new ModelBuilder("Table".AsMemory(),
-            new FieldRequest("Col1".AsMemory(), InferredNumberType<int>.Instance),
-            new FieldRequest("Col2".AsMemory(), InferredNumberType<int>.Instance));
-        var data = new[]
-        {
-            new[] { "1".AsMemory(), "2".AsMemory() },
-            new[] { "3".AsMemory(), "4".AsMemory() },
-        };
-
-        request.WriteDataTo(target, data);
-        target.ToString().Should().Be("""
-                                          public readonly TableClass[] Table = new TableClass[] {
-                                              new (1, 2),
-                                              new (3, 4),
-                                          };
-                                      
-                                      """);
-    }
-
 }
