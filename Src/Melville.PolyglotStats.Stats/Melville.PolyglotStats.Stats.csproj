@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<IsPackable>true</IsPackable>
+		<PackageDescription>Basic Stastical Functions for use in notebooks</PackageDescription>
+		<PackageTags>statistics Data</PackageTags>
+		<IncludeBuildOutput>true</IncludeBuildOutput>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+	</PropertyGroup>
+
+</Project>
