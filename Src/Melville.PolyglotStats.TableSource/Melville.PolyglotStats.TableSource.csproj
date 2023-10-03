@@ -8,6 +8,12 @@
 	  <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
+  <ItemGroup>
+	  <!-- because there is no compile...remove line this code is both code and resource in one.
+	  -->
+	  <EmbeddedResource Include="MemorySerializer\MemoryReader.cs" />
+  </ItemGroup>
+
 	<ItemGroup>
 		<None Include="extension.dib" Pack="true" PackagePath="interactive-extensions/dotnet" />
 	</ItemGroup>

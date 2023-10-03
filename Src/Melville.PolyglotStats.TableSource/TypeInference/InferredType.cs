@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using FSharp.Compiler.SyntaxTrivia;
+using Melville.PolyglotStats.TableSource.MemorySerializer;
 
 namespace Melville.PolyglotStats.TableSource.TypeInference;
 
@@ -17,8 +18,12 @@ public abstract class InferredType
     public abstract bool CanParse(ReadOnlyMemory<char> datum);
     public abstract void WriteTypeName(StringBuilder target);
 
-    public virtual void WriteValue(ReadOnlyMemory<char> value, StringBuilder target)
+    public abstract void WriteValue(MemoryWriter writer, ReadOnlyMemory<char> value);
+
+    public virtual void WriteReader(StringBuilder target)
     {
-        target.Append(value);
+        target.Append("reader.Read<");
+        WriteTypeName(target);
+        target.Append(">()");
     }
 }

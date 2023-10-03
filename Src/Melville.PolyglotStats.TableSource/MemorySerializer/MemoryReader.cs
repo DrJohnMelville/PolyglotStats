@@ -1,10 +1,12 @@
-﻿using System;
+﻿#if !InsideGeneratedCode
+using System;
 using System.IO;
 using System.IO.MemoryMappedFiles;
 using System.Runtime.InteropServices;
 using System.Text;
 
 namespace Melville.PolyglotStats.TableSource.MemorySerializer;
+#endif 
 
 public sealed class MemoryReader : IDisposable
 {

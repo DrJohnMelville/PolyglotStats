@@ -18,9 +18,10 @@ public class TableKernel: Kernel, IKernelCommandHandler<SubmitCode>
 
     public async Task HandleAsync(SubmitCode command, KernelInvocationContext context)
     {
-        var code = await GeneratorFacade.QueryToCode(command.Code, new DiskFileSystemConnector());
-        context.DisplayCollapsed("Source Code", code);
-        await ExecuteCSharpCode(context, code);
+        using var result = await GeneratorFacade.QueryToCode(command.Code, new DiskFileSystemConnector());
+           //Holding on to result until after ExecuteCSharpCode keeps the memory mapped filed open
+        context.DisplayCollapsed("Source Code", result.Code);
+        await ExecuteCSharpCode(context, result.Code);
         context.Display("done");
     }
 

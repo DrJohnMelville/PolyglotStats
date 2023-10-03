@@ -73,18 +73,4 @@ public class ModelGeneratorTests
                                       """);
     }
 
-    [Theory]
-    [InlineData("2", "2")]
-    [InlineData("1e6", "1e6")]
-    [InlineData("1.5", "1.5")]
-    [InlineData("Hello", "@\"Hello\"")]
-    [InlineData("t", "true")]
-    [InlineData("", "default")]
-    [InlineData("1/2/33", "System.DateTime.Parse(\"1/2/33\")")]
-    public void PrintValue(string source, string destination)
-    {
-        var type = InferType.Of(new[] { source.AsMemory() }).SelectByNullability(true);
-        type.WriteValue(source.AsMemory(), target);
-        target.ToString().Should().Be(destination);
-    }
 }

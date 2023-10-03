@@ -33,7 +33,7 @@ public sealed class MemoryWriter: IDisposable
         stream.Write(t);
     }
 
-    public void WriteString(string value)
+    public void WriteString(ReadOnlySpan<char> value)
     {
         var length = Encoding.UTF8.GetByteCount(value);
         Write(length);

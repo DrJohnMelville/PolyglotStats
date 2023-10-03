@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using FSharp.Compiler.Syntax;
+using Melville.PolyglotStats.TableSource.MemorySerializer;
 using Melville.PolyglotStats.TableSource.ModelGenerators;
 
 namespace Melville.PolyglotStats.TableSource.Parser;
@@ -13,35 +15,55 @@ public class ParsedTableSet
     public List<ParsedTable> Tables = new List<ParsedTable>();
     private readonly StringBuilder target = new();
 
-    public string GenerateCode()
+    public GeneratedCodeResult GenerateCode()
     {
-        var target = new StringBuilder();
-        GenerateCodeTo(target);
-        return target.ToString();
+        var streams = GenerateCodeTo();
+        return new GeneratedCodeResult(target.ToString(), streams);
     }
 
-    private void GenerateCodeTo(StringBuilder target)
+    private IEnumerable<IDisposable> GenerateCodeTo()
     {
-        GenerateClassHeader(target);
-        GenerateTables(target);
-        GenerateClassFooter(target);
+        GenerateUsings();
+        GenerateClassHeader();
+        GenerateReaderDefinition();
+        var ret = GenerateTables();
+        GenerateClassFooter();
+        return ret;
     }
 
-    private void GenerateClassHeader(StringBuilder target) => 
+    private void GenerateReaderDefinition()
+    {
+        target.AppendLine(ReaderSource.Code());
+    }
+
+    private void GenerateUsings()
+    {
+        target.AppendLine("""
+                          #define InsideGeneratedCode
+                          using System;
+                          using System.IO;
+                          using System.IO.MemoryMappedFiles;
+                          using System.Runtime.InteropServices;
+                          using System.Text;
+                          
+                          """);
+    }
+
+    private void GenerateClassHeader() => 
         target.AppendLine($"public class {Name}Class {{");
 
-    private void GenerateClassFooter(StringBuilder target)
+    private void GenerateClassFooter()
     {
         target.AppendLine("}");
         target.Append($"public readonly {Name}Class {Name} = new();");
     }
 
-    private void GenerateTables(StringBuilder target)
+    private IEnumerable<IDisposable> GenerateTables() => 
+        Tables.Select(GenerateSingleTable).ToArray();
+
+    private IDisposable GenerateSingleTable(ParsedTable table)
     {
-        foreach (var table in Tables)
-        {
-            new ModelBuilder(table.Name.CanonicalName(), table.FieldRequests())
-                .GenerateClass(target, table.Rows);
-        }
+        return new ModelBuilder(table.Name.CanonicalName(), table.FieldRequests())
+            .GenerateClass(target, table.Rows);
     }
 }
