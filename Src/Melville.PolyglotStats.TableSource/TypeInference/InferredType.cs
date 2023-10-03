@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Text;
-using FSharp.Compiler.SyntaxTrivia;
 using Melville.PolyglotStats.TableSource.MemorySerializer;
 
 namespace Melville.PolyglotStats.TableSource.TypeInference;
