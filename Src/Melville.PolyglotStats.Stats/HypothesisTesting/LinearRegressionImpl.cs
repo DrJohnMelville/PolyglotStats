@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using Accord.Statistics.Analysis;
+using Melville.PolyglotStats.Stats.PolyglotFormatting;
+using Melville.PolyglotStats.Stats.Tables;
 
 namespace Melville.PolyglotStats.Stats.HypothesisTesting;
 
-public sealed class LinearRegressionImpl<T> : RegressionBase<T, double, LinearRegressionImpl<T>>
+[TypeFormatterSource(typeof(TableFormatterSource), PreferredMimeTypes = new[] {"text/html"})]
+public sealed class LinearRegressionImpl<T> : RegressionBase<T, double, LinearRegressionImpl<T>>, ICanRenderASHtml
 {
     public LinearRegressionImpl(IEnumerable<T> items, Func<T, double> resultsFunc) : base(items, resultsFunc)
     {
@@ -26,7 +29,7 @@ public sealed class LinearRegressionImpl<T> : RegressionBase<T, double, LinearRe
         return analyzer;
     }
 
-    private object ToDump()
+    public string RenderAsHtml()
     {
         var result = Regress();
         return new XElement("div",

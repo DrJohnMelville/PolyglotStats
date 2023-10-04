@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using Accord.Statistics.Analysis;
+using Melville.PolyglotStats.Stats.PolyglotFormatting;
+using Melville.PolyglotStats.Stats.Tables;
 
 namespace Melville.PolyglotStats.Stats.HypothesisTesting;
 
-public sealed class 
-    LogisticRegressionImpl<T>:RegressionBase<T, bool, LogisticRegressionImpl<T>>
+[TypeFormatterSource(typeof(TableFormatterSource), PreferredMimeTypes = new[] {"text/html"})]
+public sealed class LogisticRegressionImpl<T>:
+    RegressionBase<T, bool, LogisticRegressionImpl<T>>, ICanRenderASHtml
 {
     public LogisticRegressionImpl(IEnumerable<T> items, Func<T, bool> resultsFunc) : base(items, resultsFunc)
     {
@@ -28,10 +31,10 @@ public sealed class
         return analyzer;
     }
 
-    private object ToDump()
+    public string RenderAsHtml()
     {
         var result = Regress();
-        return new XElement("LinqPad.Html",
+        return 
             new XElement("div",
                 new XElement("table",
                     new XElement("tr", new XElement("td", "N"), new XElement("td", result.NumberOfSamples)),
@@ -46,6 +49,6 @@ public sealed class
                         new XElement("td", i.Wald.PValue.ToString("0.0000")), 
                         new XElement("td", $"{i.ConfidenceLower:###0.##} - {i.ConfidenceUpper:###0.##}"))
                     )
-                )));
+                )).ToString();
     }
 }
