@@ -5,6 +5,7 @@ using Melville.TestHelpers.StringDatabase;
 
 namespace Melville.PolyglotStats.Test.Stats.Tables;
 
+  
   public sealed class TableTest: IClassFixture<StringTestDatabase>
   {
     private readonly StringTestDatabase data;

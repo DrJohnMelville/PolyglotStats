@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Xml.Linq;
 using Melville.PolyglotStats.Stats.Functional;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.Text;
 
 namespace Melville.PolyglotStats.Stats.FileWriters;
 

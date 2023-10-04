@@ -2,6 +2,7 @@
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System;
+using System.Collections;
 
 namespace Melville.PolyglotStats.Stats.Functional;
 
@@ -32,4 +33,11 @@ public static class FunctionalMethodImpl
         return list.Cycle(copies * list.Count);
     }
 
+    public static IEnumerable<object> ObjectListWithNulls(this IEnumerable src)
+    {
+        foreach (var item in src)
+        {
+            yield return item;
+        }
+    }
 }

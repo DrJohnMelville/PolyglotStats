@@ -16,6 +16,7 @@
 
 	<ItemGroup>
 	  <PackageReference Include="Accord.Statistics" Version="3.8.0" />
+	  <PackageReference Include="EPPlus.Core" Version="1.5.4" />
 	  <PackageReference Include="Melville.Linq" Version="0.6.18" />
 	</ItemGroup>
 
