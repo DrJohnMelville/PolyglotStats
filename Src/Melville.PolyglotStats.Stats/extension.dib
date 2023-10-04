@@ -1,0 +1,5 @@
+﻿using Melville.PolyglotStats.Stats.DescriptiveStats;
+using Melville.PolyglotStats.Stats.FileWriters;
+using Melville.PolyglotStats.Stats.Functional;
+using Melville.PolyglotStats.Stats.HypothesisTesting;
+using Melville.PolyglotStats.Stats.Tables;
