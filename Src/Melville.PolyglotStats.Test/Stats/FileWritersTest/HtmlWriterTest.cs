@@ -20,14 +20,14 @@ public sealed class HtmlWriterTest: IClassFixture<StringTestDatabase>
     {
         data.AssertDatabase(new HtmlTable().WithDataRow<int>("Data",
                 i=>i.Count.ToString(), Enumerable.Range(1,10).AsList(), Enumerable.Range(1,20).AsList())
-            .ToHtmlText().ToString());
+            .RenderAsHtml().ToString());
     }
 
     [Fact]
     public void SimpleTable()
     {
         var actual = new HtmlTable()
-            .WithRow("A","B").WithRow("C","D").ToHtmlText().ToString();
+            .WithRow("A","B").WithRow("C","D").RenderAsHtml().ToString();
         Assert.Equal("""
                        <table>
                          <tr>
@@ -46,7 +46,7 @@ public sealed class HtmlWriterTest: IClassFixture<StringTestDatabase>
     public void SimpleNNonsquareTable()
     {
         var actual = new HtmlTable()
-            .WithRow("A","B").WithRow("C").ToHtmlText().ToString();
+            .WithRow("A","B").WithRow("C").RenderAsHtml().ToString();
         Assert.Equal("""
                        <table>
                          <tr>

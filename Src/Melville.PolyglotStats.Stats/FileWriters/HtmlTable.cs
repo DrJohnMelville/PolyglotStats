@@ -5,11 +5,13 @@ using System.Linq;
 using System.Xml.Linq;
 using Melville.PolyglotStats.Stats.DescriptiveStats;
 using Melville.PolyglotStats.Stats.Functional;
+using Melville.PolyglotStats.Stats.PolyglotFormatting;
 using Melville.PolyglotStats.Stats.Tables;
 
 namespace Melville.PolyglotStats.Stats.FileWriters;
 
-public class HtmlTable
+[TypeFormatterSource(typeof(TableFormatterSource), PreferredMimeTypes = new[] {"text/html"})]
+public class HtmlTable: ICanRenderASHtml
 {
     private readonly List<IEnumerable> rows = new List<IEnumerable>();
 
@@ -88,7 +90,7 @@ public class HtmlTable
     }
 
 
-    public string ToHtmlText()
+    public string RenderAsHtml()
     {
         var paddedRows = TablePadder.PadColumns(rows.Select(i => i.OfType<object>().Select(RenderCell).AsList()));
         return            new XElement("table",

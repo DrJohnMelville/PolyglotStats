@@ -17,7 +17,7 @@ internal class TableFormatter: IConventionBasedFormaatter
 
     public bool Format(object instance, TextWriter writer)
     {
-        if (instance is not ITable table) return false;
+        if (instance is not ICanRenderASHtml table) return false;
         writer.Write(table.RenderAsHtml());
         return true;
     }
