@@ -7,6 +7,7 @@ using Accord.Statistics.Analysis;
 using Accord.Statistics.Testing;
 using Melville.PolyglotStats.Stats.FileWriters;
 using Melville.PolyglotStats.Stats.Functional;
+using Melville.PolyglotStats.Stats.HypothesisTesting;
 using Melville.PolyglotStats.Stats.PolyglotFormatting;
 
 namespace Melville.PolyglotStats.Stats.Tables;
@@ -392,24 +393,23 @@ public abstract class TableImplementation<TItem, TStorage> : ITable<TItem> where
 
     #region Chi Square
 
-#warning Uncomment when Chi Squared defined
 
-    // private GeneralConfusionMatrix GeneralizedConfusionMatrix()
-    // {
-    //     var rows = GridRows().AsList();
-    //     var cols = GridColumns().AsList();
-    //     return new GeneralConfusionMatrix(
-    //         rows.Select(r => cols.Select(c => r.Elements.Intersect(c.Elements).Count()).ToList() as IList<int>)
-    //             .ToList().To2x2());
-    // }
-    // public ChiSquaredStatisic ChiSquared()
-    // {
-    //     var mat = GeneralizedConfusionMatrix();
-    //     //Notixce that we have to set the degrees of freedom ourselves and not to get it from the
-    //     // generalizedconfusionmatrix.  GCM has a bug where it assumes that it is square.
-    //     return new ChiSquaredStatisic(new ChiSquareTest(mat, false).Statistic, 
-    //         (mat.Matrix.GetLength(0) - 1) * (mat.Matrix.GetLength(1) - 1));
-    // }
-    //
+    private GeneralConfusionMatrix GeneralizedConfusionMatrix()
+    {
+        var rows = GridRows().AsList();
+        var cols = GridColumns().AsList();
+        return new GeneralConfusionMatrix(
+            rows.Select(r => cols.Select(c => r.Elements.Intersect(c.Elements).Count()).ToList() as IList<int>)
+                .ToList().To2x2());
+    }
+    public ChiSquaredStatisic ChiSquared()
+    {
+        var mat = GeneralizedConfusionMatrix();
+        //Notixce that we have to set the degrees of freedom ourselves and not to get it from the
+        // generalizedconfusionmatrix.  GCM has a bug where it assumes that it is square.
+        return new ChiSquaredStatisic(new ChiSquareTest(mat, false).Statistic, 
+            (mat.Matrix.GetLength(0) - 1) * (mat.Matrix.GetLength(1) - 1));
+    }
+    
     #endregion
 }

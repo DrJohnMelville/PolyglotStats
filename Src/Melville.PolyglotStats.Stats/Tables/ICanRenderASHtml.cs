@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using Melville.PolyglotStats.Stats.HypothesisTesting;
 
 namespace Melville.PolyglotStats.Stats.Tables;
 
@@ -26,6 +27,5 @@ public interface ITable<TItem>: ICanRenderASHtml
     IEnumerable<TItem> ColumnValues(int p0);
     IEnumerable<TItem> CellValues(int row, int col);
     IEnumerable<TItem> AllValues();
-#warning uncomment this when Chi squared is implemented
-//    ChiSquaredStatisic ChiSquared();
+    ChiSquaredStatisic ChiSquared();
 }

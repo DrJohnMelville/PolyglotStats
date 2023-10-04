@@ -19,8 +19,7 @@ public class HtmlTable: ICanRenderASHtml
     {
         if (row.Length == 1 && !(row[0] is string))
         {
-            var enumerable = row[0] as IEnumerable;
-            if (enumerable != null)
+            if (row[0] is IEnumerable enumerable)
             {
                 return WithRow(enumerable.OfType<object>().ToArray());
             }
