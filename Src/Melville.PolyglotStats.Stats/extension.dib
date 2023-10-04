@@ -3,3 +3,4 @@ using Melville.PolyglotStats.Stats.FileWriters;
 using Melville.PolyglotStats.Stats.Functional;
 using Melville.PolyglotStats.Stats.HypothesisTesting;
 using Melville.PolyglotStats.Stats.Tables;
+using Melville.PolyglotStats.Stats.Functional;
