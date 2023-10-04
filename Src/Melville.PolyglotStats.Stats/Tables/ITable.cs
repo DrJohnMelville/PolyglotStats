@@ -4,7 +4,13 @@ using System.Linq.Expressions;
 
 namespace Melville.PolyglotStats.Stats.Tables;
 
-public interface ITable<TItem>
+public interface ITable
+{
+    string RenderAsHtml();
+#warning uncomment this when Chi squared is implemented
+//    ChiSquaredStatisic ChiSquared();
+}
+public interface ITable<TItem>: ITable
 {
     // Create Rows And Columns
     ITable<TItem> WithRows<TKey>(Expression<Func<TItem, TKey>> selector);
@@ -18,9 +24,6 @@ public interface ITable<TItem>
         SummaryFunctionSelection selection = SummaryFunctionSelection.All);
     ITable<TItem> WithFormatter<T>(Func<T, string> func);
 
-    object ToDump();
-    #warning uncomment this
-//    ChiSquaredStatisic ChiSquared();
     IEnumerable<TItem> RowValues(int i);
     IEnumerable<TItem> ColumnValues(int p0);
     IEnumerable<TItem> CellValues(int row, int col);

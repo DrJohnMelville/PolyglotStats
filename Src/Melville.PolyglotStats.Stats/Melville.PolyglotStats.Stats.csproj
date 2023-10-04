@@ -10,7 +10,7 @@
 
 	<ItemGroup>
 	  <Folder Include="DescriptiveStats\" />
-	  <Folder Include="Functional\" />
+	  <Folder Include="PolyglotFormatting\" />
 	  <Folder Include="Tables\" />
 	</ItemGroup>
 

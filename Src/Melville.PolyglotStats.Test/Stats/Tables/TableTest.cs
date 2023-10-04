@@ -1,5 +1,6 @@
 ﻿using Melville.PolyglotStats.Stats.Tables;
 using System.Linq;
+using Melville.PolyglotStats.Stats.Functional;
 using Melville.TestHelpers.StringDatabase;
 
 namespace Melville.PolyglotStats.Test.Stats.Tables;
@@ -11,6 +12,7 @@ namespace Melville.PolyglotStats.Test.Stats.Tables;
     public TableTest(StringTestDatabase data)
     {
       this.data = data;
+      //data.Recording = true;
     }
 
     [Fact]
@@ -31,7 +33,7 @@ namespace Melville.PolyglotStats.Test.Stats.Tables;
         .WithColumns(i => i % 3 == 0)
         .WithCellFunction(CellFunctions.RowPercentage);
 
-      data.AssertDatabase(table.ToDump().ToString());
+      data.AssertDatabase(table.RenderAsHtml().ToString());
 
     }
     [Fact]
@@ -42,7 +44,7 @@ namespace Melville.PolyglotStats.Test.Stats.Tables;
         .WithColumns(i => i % 3 == 0)
         .WithCellFunction(CellFunctions.ColumnPercentage);
 
-      data.AssertDatabase(table.ToDump().ToString());
+      data.AssertDatabase(table.RenderAsHtml().ToString());
 
     }
     [Fact]
@@ -53,7 +55,7 @@ namespace Melville.PolyglotStats.Test.Stats.Tables;
         .WithColumns(i => i % 3 == 0)
         .WithCellFunction(CellFunctions.TablePercentage);
 
-      data.AssertDatabase(table.ToDump().ToString());
+      data.AssertDatabase(table.RenderAsHtml().ToString());
 
     }
     [Fact]
@@ -92,7 +94,7 @@ namespace Melville.PolyglotStats.Test.Stats.Tables;
         Assert.Equal((2*i)+1, rows[0].Elements.Skip(i).First().Value);
         Assert.Equal((2*i)+2, rows[1].Elements.Skip(i).First().Value);        
       }
-      data.AssertDatabase(table.ToDump().ToString());
+      data.AssertDatabase(table.RenderAsHtml().ToString());
     }
     
     [Fact]
@@ -106,7 +108,7 @@ namespace Melville.PolyglotStats.Test.Stats.Tables;
       var columns = table.GridRows().AsList();
       Assert.Equal(4, columns.Count());
 
-      data.AssertDatabase(table.ToDump().ToString());
+      data.AssertDatabase(table.RenderAsHtml().ToString());
     }
 
     [Fact]
@@ -118,7 +120,7 @@ namespace Melville.PolyglotStats.Test.Stats.Tables;
          WithExplicitRow("Rows", i => i % 7 == 0, ie => ie % 10 == 0)
          .WithExplicitColumn("Divisible", i => i % 2 == 0, i => i % 3 == 0, i => i % 5 == 0);
 
-      data.AssertDatabase(table.ToDump().ToString());
+      data.AssertDatabase(table.RenderAsHtml().ToString());
     }
 
     [Fact]
@@ -131,7 +133,7 @@ namespace Melville.PolyglotStats.Test.Stats.Tables;
           .WithColumns("Divisable By 3", i => i % 3 == 0);
       
       Assert.Equal(1, table.RowHeaders.DimensionLength(0));
-      table.ToDump();
+      table.RenderAsHtml();
     }
 
     [Theory]
@@ -157,7 +159,7 @@ namespace Melville.PolyglotStats.Test.Stats.Tables;
       data.AssertDatabase(
         Enumerable.Range(1, 100).Table()
         .WithColumns(i => i % 10)
-        .ToDump().ToString());
+        .RenderAsHtml().ToString());
     }
     
     [Fact]
@@ -166,7 +168,7 @@ namespace Melville.PolyglotStats.Test.Stats.Tables;
       data.AssertDatabase(
         Enumerable.Range(1, 100).Table()
           .WithRows(i => i % 10)
-          .ToDump().ToString());
+          .RenderAsHtml().ToString());
     }
     [Fact]
     public void MultiRow1Col()
@@ -176,7 +178,7 @@ namespace Melville.PolyglotStats.Test.Stats.Tables;
           .WithRows("Divisable by 2", i => i % 2 == 0)
           .WithRows("Divisable By 3", i => i % 3 == 0)
           .WithColumns("Mod 5", i => i % 5)
-          .ToDump().ToString());
+          .RenderAsHtml().ToString());
     }
     [Fact]
     public void NullItem()
@@ -186,7 +188,7 @@ namespace Melville.PolyglotStats.Test.Stats.Tables;
           .WithRows("Divisable by 2", i => i % 2 == 0)
           .WithRows("Divisable By 3", i => i % 3 == 0 ? null : (i % 3).ToString())
           .WithColumns("Mod 5", i => i % 5 == 2 ? null : (i % 5).ToString())
-          .ToDump().ToString());
+          .RenderAsHtml().ToString());
     }
     [Fact]
     public void MultiCol1Row()
@@ -196,7 +198,7 @@ namespace Melville.PolyglotStats.Test.Stats.Tables;
           .WithRows("Divisable by 2", i => i % 2 == 0)
           .WithColumns("Divisable By 3", i => i % 3 == 0)
           .WithColumns("Mod 5", i => i % 5)
-          .ToDump().ToString());
+          .RenderAsHtml().ToString());
     }
     [Fact]
     public void MultiColMultiRow()
@@ -207,6 +209,6 @@ namespace Melville.PolyglotStats.Test.Stats.Tables;
           .WithRows("Divisable By 3", i => i % 3 == 0)
           .WithColumns("Mod 5", i => i % 5)
           .WithColumns("Mod 7", i => i % 7)
-          .ToDump().ToString());
+          .RenderAsHtml().ToString());
     }
   }

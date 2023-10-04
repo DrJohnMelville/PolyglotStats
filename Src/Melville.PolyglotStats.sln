@@ -12,7 +12,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Melville.PolyglotStats.Test", "Melville.PolyglotStats.Test\Melville.PolyglotStats.Test.csproj", "{BBDB8D00-CF80-4397-ABB0-70D5F53E8FCC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Melville.PolyglotStats.Stats", "Melville.PolyglotStats.Stats\Melville.PolyglotStats.Stats.csproj", "{C6635EB5-0B17-4047-AD7E-1ABB567BFB96}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Melville.PolyglotStats.Stats", "Melville.PolyglotStats.Stats\Melville.PolyglotStats.Stats.csproj", "{C6635EB5-0B17-4047-AD7E-1ABB567BFB96}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,9 +35,6 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{C6635EB5-0B17-4047-AD7E-1ABB567BFB96} = {C4B6C5BA-2C4A-4CED-B7BA-3F9185EA5F56}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {46063770-2F8D-4C00-9171-4FFDC866070A}
