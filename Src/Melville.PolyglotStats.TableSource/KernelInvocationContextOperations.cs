@@ -21,13 +21,4 @@ public static class KernelInvocationContextOperations
                                         """));
     }
 
-    /*
-     *
-     * context.Display(new HtmlString($"""
-       <details>
-       <summary>Success</summary>
-       <p>{command.Code}</p>
-       </details>
-       """));
-     */
 }

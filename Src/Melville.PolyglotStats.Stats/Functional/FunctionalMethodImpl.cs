@@ -8,21 +8,6 @@ namespace Melville.PolyglotStats.Stats.Functional;
 
 public static class FunctionalMethodImpl
 {
-    public static TDest Map<TSource, TDest>(TSource item,
-        params (TSource Source, TDest Dest)[] tuples)
-    {
-        return tuples.First(i => Object.Equals(item, i.Source)).Dest;
-    }
-
-    public static TDest Map<TSource, TDest>(TSource item, TDest defaultValue,
-        params (TSource Source, TDest Dest)[] tuples)
-    {
-        return tuples.Where(i => Object.Equals(item, i.Source))
-            .DefaultIfEmpty((Source: default!, Dest: defaultValue!))
-            .First()
-            .Dest;
-    }
-
     public static IList<T> AsList<T>(this IEnumerable<T> item) =>
         item is IList<T> list ? list : item.ToList();
 

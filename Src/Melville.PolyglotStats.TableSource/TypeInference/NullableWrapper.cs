@@ -36,7 +36,7 @@ public partial class NullableWrapper : InferredType
 
     public override void WriteReader(StringBuilder target)
     {
-        target.Append("reader.Read<byte>()==0?default:");
+        target.Append("reader.Read<byte>()==0?null:");
         inner.WriteReader(target);
     }
 }

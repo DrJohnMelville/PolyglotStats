@@ -37,4 +37,6 @@ public class MemorySerializerTest
         using var reader = new MemoryReader(writer.Name);
         reader.ReadString().Should().Be(s);
     }
+
+    
 }
