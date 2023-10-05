@@ -15,11 +15,15 @@ public readonly partial struct FieldRequest
     [FromConstructor] private readonly ReadOnlyMemory<char> name;
     [FromConstructor] private readonly InferredType type;
 
-    public void RenderField(StringBuilder target)
+    public void RenderField(StringBuilder target, StringBuilder documentation)
     {
         target.Append($"        ");
         type.WriteTypeName(target);
         target.Append($" {name}");
+
+        documentation.Append("<tr><td>");
+        type.WriteTypeName(documentation);
+        documentation.AppendLine($"</td><td>{name}</td><tr>");
     }
 
     public void WriteValue(MemoryWriter value, ReadOnlyMemory<char> target) =>
@@ -32,31 +36,49 @@ public readonly partial struct ModelBuilder
 {
     [FromConstructor] private readonly ReadOnlyMemory<char> name;
     [FromConstructor] private readonly IList<FieldRequest> fields;
-
-    public ModelBuilder(ReadOnlyMemory<char> name , params FieldRequest[] fields): 
-        this(name, (IList<FieldRequest>)fields){}
+    [FromConstructor] private readonly StringBuilder target;
+    [FromConstructor] private readonly StringBuilder documentation;
 
     public IDisposable GenerateClass(StringBuilder target, IEnumerable<ReadOnlyMemory<char>[]> data)
     {
-        WriteTypeDeclarationTo(target);
-        return WriteDataTo(target, data);
+        WriteTypeDeclarationTo();
+        return WriteDataTo(data);
     }
 
-    public void WriteTypeDeclarationTo(StringBuilder target)
+    public void WriteTypeDeclarationTo()
     {
-        target.AppendLine($"    public record {name}Class (");
+        RenderHeaders();
+
+
         for (int i = 0; i < fields.Count - 1; i++)
         {
-            fields[i].RenderField(target);
+            fields[i].RenderField(target, documentation);
             target.AppendLine(",");
         }
-
-        fields[^1].RenderField(target);
-        target.AppendLine();
-        target.AppendLine("    );");
+        fields[^1].RenderField(target, documentation);
+        RenderFooters();
     }
 
-    public IDisposable WriteDataTo(StringBuilder target, IEnumerable<ReadOnlyMemory<char>[]> data)
+    private void RenderHeaders()
+    {
+        target.AppendLine($"    public record {name}Class (");
+
+        documentation.AppendLine("<div><details>");
+        documentation.AppendLine($"<summary>{name}</summary>");
+        documentation.AppendLine(
+            "<table>");
+    }
+
+    private void RenderFooters()
+    {
+        target.AppendLine();
+        target.AppendLine("    );");
+
+        documentation.AppendLine("</table>");
+        documentation.AppendLine("</details></div>");
+    }
+
+    public IDisposable WriteDataTo(IEnumerable<ReadOnlyMemory<char>[]> data)
     {
         var file = new MemoryWriter();
         target.AppendLine($"    public readonly {name}Class[] {name} = Read{name}Class();");

@@ -20,7 +20,7 @@ public class TableKernel: Kernel, IKernelCommandHandler<SubmitCode>
     {
         using (var result = await GeneratorFacade.QueryToCode(command.Code, new DiskFileSystemConnector()))
         {   //Holding on to result until after ExecuteCSharpCode keeps the memory mapped files open
-            context.DisplayCollapsed("Source Code", result.Code);
+            context.DisplayCollapsed("Tables Read", result.Documentation);
             await ExecuteCSharpCode(context, result.Code);
         }
     }

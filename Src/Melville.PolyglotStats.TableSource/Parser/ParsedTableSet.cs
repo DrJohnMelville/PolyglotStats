@@ -14,11 +14,12 @@ public class ParsedTableSet
     public ReadOnlyMemory<char> Name { get; set; }= "Data".AsMemory();
     public List<ParsedTable> Tables = new List<ParsedTable>();
     private readonly StringBuilder target = new();
+    private readonly StringBuilder documentation = new(); 
 
     public GeneratedCodeResult GenerateCode()
     {
         var streams = GenerateCodeTo();
-        return new GeneratedCodeResult(target.ToString(), streams);
+        return new GeneratedCodeResult(target.ToString(), documentation.ToString(), streams);
     }
 
     private IEnumerable<IDisposable> GenerateCodeTo()
@@ -49,13 +50,16 @@ public class ParsedTableSet
                           """);
     }
 
-    private void GenerateClassHeader() => 
+    private void GenerateClassHeader()
+    {
         target.AppendLine($"public class {Name}Class {{");
+    }
 
     private void GenerateClassFooter()
     {
         target.AppendLine("}");
         target.Append($"public readonly {Name}Class {Name} = new();");
+
     }
 
     private IEnumerable<IDisposable> GenerateTables() => 
@@ -63,7 +67,7 @@ public class ParsedTableSet
 
     private IDisposable GenerateSingleTable(ParsedTable table)
     {
-        return new ModelBuilder(table.Name.CanonicalName(), table.FieldRequests())
+        return new ModelBuilder(table.Name.CanonicalName(), table.FieldRequests(), target, documentation)
             .GenerateClass(target, table.Rows);
     }
 }

@@ -16,6 +16,7 @@ public class GeneratorFacade
 public sealed partial class GeneratedCodeResult : IDisposable
 {
     [FromConstructor] public string Code { get; }
+    [FromConstructor] public string Documentation { get; }
     [FromConstructor] private readonly IEnumerable<IDisposable> data;
 
     public void Dispose()

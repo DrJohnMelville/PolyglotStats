@@ -83,7 +83,7 @@ public partial class IntegrationTest
                 using var reader = new MemoryReader("00000000-0000-0000-0000-000000000000");
                 var ret = new Table1Class[3];
                 for (int i = 0; i < ret.Length; i++)
-                    ret[i] = new (reader.Read<byte>()==0?default:reader.Read<System.Int32>(), reader.Read<bool>());
+                    ret[i] = new (reader.Read<byte>()==0?null:reader.Read<System.Int32>(), reader.Read<bool>());
                 return ret;
                 }
             public record TabBClass (
@@ -103,12 +103,17 @@ public partial class IntegrationTest
         """)]
     public async Task GenerateDataModel(string source, string destination)
     {
-        var mock = new Mock<IDiskFileSystemConnector>();
-        mock.Setup(i => i.FileFromPath(It.IsAny<string>())).Returns(Mock.Of<IFile>());
-        using var output = await GeneratorFacade.QueryToCode(source, mock.Object);
+        using var output = await GenerateFromSource(source);
         ReplaceGuid(output.Code).Should().Be(destination);
     }
 
+    private static async Task<GeneratedCodeResult> GenerateFromSource(string source)
+    {
+        var mock = new Mock<IDiskFileSystemConnector>();
+        mock.Setup(i => i.FileFromPath(It.IsAny<string>())).Returns(Mock.Of<IFile>());
+        return await GeneratorFacade.QueryToCode(source, mock.Object);
+    }
+    
     [GeneratedRegex(@"[a-fA-F0-9]{8}-(?:[a-fA-F0-9]{4}-){3}[a-fA-F0-9]{12}")]
     private static partial Regex GuidFinder();
 
