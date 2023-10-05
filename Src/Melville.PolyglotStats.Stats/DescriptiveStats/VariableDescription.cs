@@ -1,21 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
-using System.Numerics;
-using System.Security.Cryptography;
-using System.Threading.Tasks;
-using Accord;
 using Melville.INPC;
 using Melville.PolyglotStats.Stats.FileWriters;
 using Melville.PolyglotStats.Stats.Functional;
-using Microsoft.VisualBasic;
-using OfficeOpenXml.FormulaParsing.Excel.Functions.Math;
 
 namespace Melville.PolyglotStats.Stats.DescriptiveStats;
 
 public static class VariableDescription
 {
+    public static HtmlTable Describe<TRow, TItem>(this IEnumerable<TRow> data, Func<TRow, TItem> selector) =>
+        data.Select(selector).Describe();
     public static HtmlTable Describe<T>(this IEnumerable<T> data) =>
         Describe((IList<T>)data.AsList());
 
