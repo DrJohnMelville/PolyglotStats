@@ -5,6 +5,7 @@ using System.Linq;
 using System.Xml.Linq;
 using Melville.PolyglotStats.Stats.DescriptiveStats;
 using Melville.PolyglotStats.Stats.Functional;
+using Melville.PolyglotStats.Stats.HypothesisTesting;
 using Melville.PolyglotStats.Stats.PolyglotFormatting;
 using Melville.PolyglotStats.Stats.Tables;
 
@@ -32,7 +33,7 @@ public class HtmlTable: ICanRenderASHtml
         WithRow(row.Select(i => TH(i)).ToArray());
 
     public HtmlTable WithMultiRow(IEnumerable<IEnumerable> rows) =>
-        rows.Select(i => WithRow(i.OfType<object>())).LastOrDefault();
+        rows.Select(i => WithRow(i.OfType<object>())).LastOrDefault() ?? this;
 
     private readonly ObjectFormatter formatter = new ObjectFormatter();
     public HtmlTable WithFormatter<T>(Func<T, string> func)
@@ -66,10 +67,9 @@ public class HtmlTable: ICanRenderASHtml
         {
             var f0 = collections[p0].Fraction(selector);
             var f1 = collections[p1].Fraction(selector);
-            #warning fix when we have statistics
-            // var t = ProportionStatistics.DifferenceOfProportions(f0.numerator, f0.denominator, f1.numerator,
-            //     f1.denominator);
-            // cells = cells.Concat($"{t.TwoTailedP:0.0000}");
+            var t = ProportionStatistics.DifferenceOfProportions(f0.numerator, f0.denominator, f1.numerator,
+                f1.denominator);
+            cells = cells.Append($"{t.TwoTailedP:0.0000}");
         }
         WithRow(cells);
         return this;
@@ -83,7 +83,7 @@ public class HtmlTable: ICanRenderASHtml
         var values = collections.SelectMany(i => i).Select(value).Distinct().OrderBy(i => i).AsList();
         foreach (var which in values)
         {
-            PercentileRow(title(which), i => value(i).Equals(which), p0, p1, collections);
+            PercentileRow(title(which), i => value(i)?.Equals(which)??false, p0, p1, collections);
         }
         return this;
     }

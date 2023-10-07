@@ -35,7 +35,7 @@ public class UnivariateSummary<T>: ICanRenderASHtml
     }
 
     public UnivariateSummary(IEnumerable<T> data, string outcomeName, Func<T, bool?> outcome) :
-        this(data.Where(i => outcome(i).HasValue), outcomeName, i => outcome(i).Value)
+        this(data.Where(i => outcome(i).HasValue), outcomeName, i => outcome(i) ?? false)
     {
     }
 
@@ -58,7 +58,7 @@ public class UnivariateSummary<T>: ICanRenderASHtml
             var denominator = @group.Count();
             var percent = numerator * 100.0 / denominator;
             var format = denominator >= 100 ? "{0} ({1:##0.0} %)" : "{0} ({1:##0} %)";
-            output.WithRow(HtmlTable.TD(group.Key, ("align", "right")), denominator,
+            output.WithRow(HtmlTable.TD(group.Key??"", ("align", "right")), denominator,
                 string.Format(format, numerator, percent), "", "");
         }
 

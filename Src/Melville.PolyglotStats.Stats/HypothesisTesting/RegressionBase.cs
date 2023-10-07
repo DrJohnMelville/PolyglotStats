@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System;
 using System.Linq;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.Logical;
 
 namespace Melville.PolyglotStats.Stats.HypothesisTesting;
 
@@ -21,7 +22,7 @@ public abstract class RegressionBase<T, TResult, TFinalType> where TResult : str
     }
 
     protected RegressionBase(IEnumerable<T> items, Func<T, TResult?> resultFunc) :
-        this(items, i => resultFunc(i).Value)
+        this(items, i => resultFunc(i)??default)
     {
         Filter.AddFilter(resultFunc);
     }
@@ -47,7 +48,7 @@ public abstract class RegressionBase<T, TResult, TFinalType> where TResult : str
     public TFinalType WithVariable(string name, Func<T, double?> selector)
     {
         Filter.AddFilter(selector);
-        return WithVariable(name, i => selector(i).Value);
+        return WithVariable(name, i => selector(i)??0.0);
     }
 
     public TFinalType WithVariable(Expression<Func<T, double>> selector) =>
@@ -71,7 +72,7 @@ public abstract class RegressionBase<T, TResult, TFinalType> where TResult : str
     public TFinalType WithVariable(string name, Func<T, bool?> selector)
     {
         Filter.AddFilter(selector);
-        return WithVariable(name, i => selector(i).Value);
+        return WithVariable(name, i => selector(i)??false);
     }
 
     public TFinalType WithDummyVariable<TVariable>(Expression<Func<T, TVariable?>> selector,
@@ -86,29 +87,32 @@ public abstract class RegressionBase<T, TResult, TFinalType> where TResult : str
     }
 
     public TFinalType WithDummyVariable<TVariable>(Expression<Func<T, TVariable>> selector, TVariable? referrant = null,
-        RequireStruct<TVariable> reserved = null) where TVariable : struct =>
+        RequireStruct<TVariable>? reserved = null) where TVariable : struct =>
         WithDummyVariable(ExpressionPrinter.Print(selector), selector.Compile(), referrant, reserved);
 
     public TFinalType WithDummyVariable<TVariable>(string name, Func<T, TVariable> selector,
-        TVariable? referrant = null, RequireStruct<TVariable> reserved = null) where TVariable : struct =>
+        TVariable? referrant = null, RequireStruct<TVariable>? reserved = null) where TVariable : struct =>
         InnerWithDummyVariable(name, selector, referrant);
 
-    public TFinalType WithDummyVariable<TVariable>(Expression<Func<T, TVariable>> selector, TVariable referrant = null,
-        RequireClass<TVariable> reserved = null) where TVariable : class =>
+    public TFinalType WithDummyVariable<TVariable>(Expression<Func<T, TVariable>> selector, 
+        TVariable? referrant = null,
+        RequireClass<TVariable>? reserved = null) where TVariable : class =>
         WithDummyVariable(ExpressionPrinter.Print(selector), selector.Compile(), referrant, reserved);
 
-    public TFinalType WithDummyVariable<TVariable>(string name, Func<T, TVariable> selector, TVariable referrant = null,
-        RequireClass<TVariable> reserved = null) where TVariable : class
+    public TFinalType WithDummyVariable<TVariable>(string name, Func<T, TVariable> selector, 
+        TVariable? referrant = null,
+        RequireClass<TVariable>? reserved = null) where TVariable : class
     {
         Filter.AddFilter(selector);
         return InnerWithDummyVariable(name, selector, referrant);
     }
 
-    private TFinalType InnerWithDummyVariable<TVariable>(string name, Func<T, TVariable> selector, object referrant)
+    private TFinalType InnerWithDummyVariable<TVariable>(
+        string name, Func<T, TVariable> selector, object? referrant)
     {
         var values = rawItems.Select(selector).Where(i => i != null).Distinct().OrderBy(i => i);
         referrant = referrant ?? values.FirstOrDefault();
-        SetupDummyVariable(name, selector, values.Where(i => !i.Equals(referrant)));
+        SetupDummyVariable(name, selector, values.Where(i => !i?.Equals(referrant)??false));
         return ReturnValue;
     }
 
@@ -117,7 +121,7 @@ public abstract class RegressionBase<T, TResult, TFinalType> where TResult : str
         foreach (var value in values)
         {
             var capturedValue = value;
-            WithVariable($"{name}: {value}", i => selector(i).Equals(capturedValue) ? 1.0 : 0.0);
+            WithVariable($"{name}: {value}", i => (selector(i)?.Equals(capturedValue)??false) ? 1.0 : 0.0);
         }
     }
 

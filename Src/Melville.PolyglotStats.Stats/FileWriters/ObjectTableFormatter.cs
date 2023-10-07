@@ -14,29 +14,21 @@ public static partial class ObjectTableFormatter
         yield return fields.Select(i => UnPascalCase(i.Name)).ToList();
         foreach (var row in objects)
         {
-            yield return fields.Select(i => ProcessField(i.GetMethod.Invoke(row, null))).ToList();
+            yield return fields.Select(i => ProcessField(i.GetMethod?.Invoke(row, null))??"").ToList();
         }
     }
 
-    private static object ProcessField(object field)
-    {
-        switch (field)
+    private static object? ProcessField(object? field) => field switch
         {
-            case int Int:
-                return Int;
-            case double d:
-                return d;
-            case DateTime d:
-                return d.ToShortDateString();
-            case null:
-                return null;
-            default:
-                return ProcessString(field.ToString());
-        }
-    }
+            int i => i,
+            double d => d,
+            DateTime d => d.ToShortDateString(),
+            _ => ProcessString(field?.ToString())
+        };
 
-    private static object ProcessString(string field)
+    private static object? ProcessString(string? field)
     {
+        if (field == null) return null;
         if (int.TryParse(field, out var intValue)) return intValue;
         if (double.TryParse(field, out var doubleValue)) return doubleValue;
         return field;

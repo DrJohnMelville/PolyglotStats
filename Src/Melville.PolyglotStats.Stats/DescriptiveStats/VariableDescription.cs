@@ -85,7 +85,7 @@ public readonly partial struct VariableDescriber<T>
         }
     }
 
-    private static string? PrintValue(IGrouping<T, T>? row)
+    private static string PrintValue(IGrouping<T, T>? row)
     {
         var ret = row?.Key?.ToString();
         return string.IsNullOrWhiteSpace(ret) ? "<null>" : ret;

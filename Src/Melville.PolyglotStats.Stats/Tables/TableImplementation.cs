@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Xml.Linq;
@@ -214,17 +215,17 @@ public abstract class TableImplementation<TItem, TStorage> : ITable<TItem> where
         }
 
         private IEnumerable<IEnumerable<XElement>> AddExtraRowTitle(
-            IEnumerable<IEnumerable<XElement>> headderRows, IEnumerable<IEnumerable<XElement>> bodyRows)
+            IEnumerable<IEnumerable<XElement>> headderRows, IEnumerable<IEnumerable<XElement?>> bodyRows)
         {
             if (RowHeaders.Count != 1)
             {
-                return headderRows.Concat(bodyRows);
+                return headderRows.Concat(bodyRows)!;
             }
             var headderList = headderRows.AsList();
             var bodyList = bodyRows.AsList();
             var bodyListCount = bodyList.Count - (HasFooterRow()?1:0);
             return PrependFirst(headderList, Elt("Td", "", ("rowspan", headderList.Count)))
-                .Concat(PrependFirst(bodyList, Elt("th", RowHeaders[0].Name, ("rowspan", bodyListCount))));
+                .Concat(PrependFirst(bodyList, Elt("th", RowHeaders[0].Name, ("rowspan", bodyListCount))))!;
         }
 
         public IEnumerable<IEnumerable<T>> PrependFirst<T>(IEnumerable<IEnumerable<T>> body,
@@ -319,7 +320,7 @@ public abstract class TableImplementation<TItem, TStorage> : ITable<TItem> where
         }
 
 
-        private IEnumerable<IEnumerable<XElement>> GridRows()
+        private IEnumerable<IEnumerable<XElement?>> GridRows()
         {
             var cols = table.GridColumns().AsList();
             int rowNum = 0;
@@ -334,7 +335,7 @@ public abstract class TableImplementation<TItem, TStorage> : ITable<TItem> where
             }
         }
 
-        private IEnumerable<XElement> FooterRow(IList<GridRowOrColumn<TStorage>> cols)
+        private IEnumerable<XElement?> FooterRow(IList<GridRowOrColumn<TStorage>> cols)
         {
             return new[] {Elt("td", "", ("colspan", Math.Max(2, RowHeaders.Count)))}.Concat(
                 table.colFunc == null
@@ -344,9 +345,9 @@ public abstract class TableImplementation<TItem, TStorage> : ITable<TItem> where
                             table.Items.Select(table.FromStorage))))).Append(FooterTotalCell());
         }
 
-        private XElement FooterTotalCell()
+        private XElement? FooterTotalCell()
         {
-            return HasFinalSummaryCell() ? Elt("td", table.allFunc(table.Items.Select(table.FromStorage))) : 
+            return HasFinalSummaryCell() ? Elt("td", table.allFunc!(table.Items.Select(table.FromStorage))) : 
                 null;
         }
 
@@ -372,7 +373,7 @@ public abstract class TableImplementation<TItem, TStorage> : ITable<TItem> where
                         table.ExtractItems(row.CellContents(i)))));
             if (HasRowSummary())
             {
-                cells = cells.Append(Elt("td", table.rowFunc(
+                cells = cells.Append(Elt("td", table.rowFunc!(
                     row.Elements.Select(table.FromStorage), table.Items.Select(table.FromStorage))));
             }
             return cells;

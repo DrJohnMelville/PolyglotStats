@@ -57,7 +57,7 @@ public static class FunctionalStatistics
         var filter = UnknownFilter.Create(items);
         filter.AddFilter(keyFunc);
         filter.AddFilter(testFunction);
-        return RankSum(filter.FilteredResult(), i => keyFunc(i).Value, i => testFunction(i).Value);
+        return RankSum(filter.FilteredResult(), i => keyFunc(i)??0.0, i => testFunction(i) ?? false);
 
     }
     public static RankSumResult RankSum<S>(this IEnumerable<S> items, Func<S, double> keyFunc,

@@ -9,7 +9,7 @@ namespace Melville.PolyglotStats.Stats.FileWriters;
 
 public sealed class ExcelFileWriter: IDisposable
 {
-    private List<(string Name, IList<IList> Cells)> Sheets = 
+    private List<(string Name, IList<IList> Cells)>? Sheets = 
         new List<(string, IList<IList>)>();
     private readonly Stream outputStream;
 
