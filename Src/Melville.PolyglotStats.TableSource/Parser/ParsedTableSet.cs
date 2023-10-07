@@ -57,8 +57,9 @@ public class ParsedTableSet
 
     private void GenerateClassFooter()
     {
+        target.Append("    public void EnsureLoaded() {}");
         target.AppendLine("}");
-        target.Append($"public readonly {Name}Class {Name} = new();");
+        target.Append($"public static readonly {Name}Class {Name} = new();  Data.EnsureLoaded();");
 
     }
 

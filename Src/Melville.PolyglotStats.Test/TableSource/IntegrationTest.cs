@@ -99,7 +99,7 @@ public partial class IntegrationTest
                 return ret;
                 }
         }
-        public readonly DataClass Data = new();
+        public static readonly DataClass Data = new();
         """)]
     public async Task GenerateDataModel(string source, string destination)
     {
